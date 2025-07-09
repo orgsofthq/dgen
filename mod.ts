@@ -211,9 +211,10 @@ export const dgen = async (args: CodegenArgs): Promise<string> => {
   if (processorTsPath) {
     try {
       // Resolve as http(s) URL or file path relative to current working directory
-      const processorTsPathResolved = processorTsPath.startsWith("http")
+      const isRemoteUrl = processorTsPath.startsWith("http");
+      const processorTsPathResolved = isRemoteUrl
         ? processorTsPath
-        : path.resolve(Deno.cwd(), processorTsPath);
+        : `file://${path.resolve(Deno.cwd(), processorTsPath)}`;
       const processor = (await import(processorTsPathResolved)).default;
       const result = await processor(processorData);
 
